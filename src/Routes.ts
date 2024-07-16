@@ -10,14 +10,14 @@ export namespace Route {
             try {
                 
                 const events = await new QueryAllByAddress().queryallbyaddress(account);
-                console.log("RESULT", events);
+                // console.log("RESULT", events);
                     if (events) {
-                        res.status(200).send({ success: true, message: 'Connected' });
+                        res.status(200).send({ success: true, status: 'Connected', data: events });
                     } else {
-                        res.status(404).send({ success: false, message: 'Not Connected' });
+                        res.status(404).send({ success: false, status: 'Not Connected' });
                     }
             } catch (error) {
-                res.status(500).send({ success: false, message: 'Internal Server Error' });
+                res.status(500).send({ success: false, status: 'Internal Server Error' });
             }
         }   
     }
