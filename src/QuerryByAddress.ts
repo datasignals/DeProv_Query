@@ -30,9 +30,9 @@ export default class QueryAllByAddress{
                     console.log("API", api.isConnected);
                     // Querying storage
                     const { templateModule } = api.query; // Adjust to match your pallet name in Substrate
-                    console.log("QUERRY",templateModule)
+                    // console.log("QUERRY",templateModule)
                     // Querying the storage
-                    const entries = await templateModule.disReAssembly.entries();
+                    const entries = await templateModule.disReAssembly.entries(account);
                     // console.log("ENTRIES", entries);
                     // Decode and log the entries
                     const allRecords = await Promise.all(entries.map(async ([storageKey, storageValue]) => {
@@ -43,8 +43,8 @@ export default class QueryAllByAddress{
                         const decodedValue = storageValue.toHuman();
                       
                         // Log the decoded key and value
-                        console.log("KEYS", accountId);
-                        console.log("VALUE", decodedValue);
+                        // console.log("KEYS", accountId);
+                        // console.log("VALUE", decodedValue);
                       
                         const data = storageValue.toJSON() as {
                           eventtype: string;
@@ -55,7 +55,7 @@ export default class QueryAllByAddress{
                       
                         // Await the result of decodeData
                         const decodedData = await this.decodeData(data);
-                        console.log("DATA", decodedData);
+                        // console.log("DATA", decodedData);
                       
                         return {
                           key: accountId,
