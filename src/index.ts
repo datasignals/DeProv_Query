@@ -13,6 +13,8 @@ const port = 3005;
 app.use(bodyParser.json());
 
 app.get('/events/accountId',Route.Get.QuerryAllByAddress);
+app.get('/events/filerecords',Route.Get.QuerryAllByFile);
+
 app.listen(port, () => console.log(`File System Deprov Query listening on port ${port}`));
 
 function Cors(arg0: { credentials: boolean; }): any {

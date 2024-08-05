@@ -21,4 +21,24 @@ export namespace Route {
             }
         }   
     }
+    export namespace Get {
+        export async function QuerryAllByFile(req: Request, res: Response) {
+          
+            // console.log("IN ROUTES", req.query.accountId)
+            const account = req.query.accountId?.toString();
+            const file = req.query.fileName?.toString();
+            try {
+                
+                const events = await new QueryAllByAddress().queryallbyfile(account,file);
+                // console.log("RESULT", events);
+                    if (events) {
+                        res.status(200).send({ success: true, status: 'Connected', data: events });
+                    } else {
+                        res.status(404).send({ success: false, status: 'Not Connected' });
+                    }
+            } catch (error) {
+                res.status(500).send({ success: false, status: 'Internal Server Error' });
+            }
+        }   
+    }
 }

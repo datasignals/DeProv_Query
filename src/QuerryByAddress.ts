@@ -3,8 +3,14 @@ import { Codec } from '@polkadot/types/types';
 import * as config from '../config/config.json';
 
 export const blockchainConfig = config.blockchain;
-
+interface FSEvent {
+    eventtype: string;
+    creationtime: string;
+    filepath: string;
+    eventkey: string;
+}
 export default class QueryAllByAddress{
+    
     
     async  queryallbyaddress(account: string | undefined) {
         console.log("IN ROUTES",account)
@@ -78,7 +84,7 @@ export default class QueryAllByAddress{
             }
         }
     }
-    async decodeData(data: { eventtype: string,creationtime: string; filepath: string; eventkey: string }): Promise<{ eventtype: string;creationtime: string; filepath: string; eventkey: string; }> {
+    async decodeData(data: { eventtype: string,creationtime: string; filepath: string; eventkey: string }): Promise<Promise<FSEvent>> {
         return {
             eventtype: this.decodeHex(data.eventtype),
             creationtime: this.decodeHex(data.creationtime),
@@ -104,6 +110,42 @@ export default class QueryAllByAddress{
         // Convert bytes to string (assuming UTF-8 encoding)
         const decodedString = new TextDecoder().decode(new Uint8Array(bytes));
         return decodedString.replace(/\0/g, ''); // Remove null characters
+    }
+
+   
+
+    async queryallbyfile(account: string | undefined, file: string | undefined) {
+        console.log("Account and File",account, file)
+        try {
+            if (!account || !file) {
+                throw new Error("Account and file parameters are required");
+            }
+            // Fetch all records for the given account
+            const allRecords: { key: string; value: FSEvent }[] = await this.queryallbyaddress(account) as { key: string; value: FSEvent }[];
+            // console.log("ALL RECORDS",allRecords)
+            // Filter records by the file name
+            // Filter records by the file name
+            const filteredRecords = allRecords.filter(record => {
+                // Extract the file name from the filepath
+                const fileName = record.value.filepath.split('/').pop() || '';
+                return fileName === file;
+            });
+
+        console.log("Filtered Records", filteredRecords);
+
+            
+            console.log("Filtered Records", filteredRecords);
+
+            return {
+                key: account,
+                value: filteredRecords
+            };
+        }
+      
+        catch (error) {
+            console.error("Error connecting to the blockchain Node");
+            return error;
+        }
     }
 
     
